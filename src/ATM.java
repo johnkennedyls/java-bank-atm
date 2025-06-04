@@ -1,23 +1,15 @@
-import java.util.ArrayList;
-import java.util.List;
+import contract.Authenticatable;
 
-public class ATM {
-    private List<Account> accounts;
+public class ATM implements Authenticatable {
 
-    public ATM() {
-        this.accounts = new ArrayList<>();
-    }
+    private String storedPin = "1234"; // Example stored PIN
 
-    public void addAccount(Account account) {
-        this.accounts.add(account);
-    }
-
-    public Account getAccount(String accountNumber) {
-        for (Account account : accounts) {
-            if (account.getAccountNumber().equals(accountNumber)) {
-                return account;
-            }
+    @Override
+    public boolean authenticate(String pin) {
+        if (pin != null && pin.equals(storedPin)) {
+            return true; // Authentication successful
+        } else {
+            return false; // Authentication failed
         }
-        return null;
     }
 }
