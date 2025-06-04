@@ -1,26 +1,22 @@
-public class ATM implements Runnable {
-    private String transactionType;
-    private double amount;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
-    public ATM(String transactionType, double amount) {
-        this.transactionType = transactionType;
-        this.amount = amount;
+public class ATM {
+    private Map<String, Account> accounts;
+
+    public ATM() {
+        accounts = new HashMap<>();
+        // Inicializa con algunas cuentas
     }
 
-    @Override
-    public void run() {
-        if(transactionType.equals("deposit")) {
-            System.out.println("Ejecutando depósito de: " + amount);
-        } else if(transactionType.equals("withdrawal")) {
-            System.out.println("Ejecutando retiro de: " + amount);
-        }
-    }
-
-    public static void main(String[] args) {
-        Thread user1 = new Thread(new ATM("deposit", 100.0));
-        Thread user2 = new Thread(new ATM("withdrawal", 50.0));
-
-        user1.start();
-        user2.start();
+    public CompletableFuture<Void> updateUserBalanceAsync(String accountNumber, double amount) {
+        return CompletableFuture.runAsync(() -> {
+            Account account = accounts.get(accountNumber);
+            synchronized (account) {
+                double newBalance = account.getBalance() + amount;
+                account.setBalance(newBalance);
+            }
+        });
     }
 }
