@@ -1,49 +1,40 @@
-import exception.InsufficientFundsException;
-import exception.InvalidAccountException;
+import java.util.concurrent.locks.ReentrantLock;
 
-public abstract class Account {
-    private String accountNumber;
+public class Account {
     private double balance;
-    private String pin;
+    private final ReentrantLock lock = new ReentrantLock();
 
-    public Account(String accountNumber, double balance, String pin) {
-        this.accountNumber = accountNumber;
-        this.balance = balance;
-        this.pin = pin;
-    }
-
-    public Account(String accountNumber, double initialBalance) {
-        this.accountNumber = accountNumber;
+    public Account(double initialBalance) {
         this.balance = initialBalance;
     }
 
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public abstract void withdraw(double amount) throws InsufficientFundsException;
-
     public void deposit(double amount) {
-        balance += amount;
+        lock.lock();
+        try {
+            balance += amount;
+            System.out.println("Depósito realizado: " + amount + ", Saldo actual: " + balance);
+        } finally {
+            lock.unlock();
+        }
     }
 
-    public void transferFunds(String targetAccountNumber, double amount)
-            throws InsufficientFundsException, InvalidAccountException {
-        if (balance < amount) {
-            throw new InsufficientFundsException("Fondos insuficientes");
+    public void withdraw(double amount) throws InsufficientFundsException {
+        lock.lock();
+        try {
+            if(balance >= amount) {
+                balance -= amount;
+                System.out.println("Retiro realizado: " + amount + ", Saldo actual: " + balance);
+            } else {
+                throw new InsufficientFundsException("Fondos insuficientes");
+            }
+        } finally {
+            lock.unlock();
         }
-        if (!Bank.isValidAccount(targetAccountNumber)) {
-            throw new InvalidAccountException("Cuenta destino no válida");
-        }
-        balance -= amount;
-        Bank.getAccount(targetAccountNumber).deposit(amount);
+    }
+}
+
+class InsufficientFundsException extends Exception {
+    public InsufficientFundsException(String message) {
+        super(message);
     }
 }
