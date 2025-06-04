@@ -1,6 +1,9 @@
 import contract.Transaction;
 import contract.TransactionFilter;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
@@ -31,5 +34,11 @@ public class ATM {
             System.out.println("Updating balances asynchronously...");
         });
     }
+
+
+    LocalDate today = LocalDate.now();
+    LocalTime now = LocalTime.now();
+    LocalDateTime dateTime = LocalDateTime.now();
+
 
 }

@@ -1,29 +1,26 @@
-public class TransactionForStream implements contract.Transaction {
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Optional;
+
+public class Transaction {
     private String accountNumber;
     private double amount;
-    private TransactionType type;
+    private LocalDateTime timestamp;
 
-    public TransactionForStream(String accountNumber, double amount, TransactionType type) {
+    public Transaction(String accountNumber, double amount) {
         this.accountNumber = accountNumber;
         this.amount = amount;
-        this.type = type;
+        this.timestamp = LocalDateTime.now();
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
+    public String getFormattedTimestamp() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm");
+        return this.timestamp.format(formatter);
     }
 
-    public double getAmount() {
-        return amount;
-    }
-
-    public TransactionType getType() {
-        return type;
-    }
-
-    @Override
-    public void execute() {
-        // Implement the transaction execution logic here
-        System.out.println("Executing transaction for account: " + accountNumber + ", amount: " + amount + ", type: " + type);
+    // Método para simulación de Optional
+    public Optional<String> getOptionalComment() {
+        return Optional.ofNullable(null); // Simulando un campo que podría estar ausente
     }
 }
+   
