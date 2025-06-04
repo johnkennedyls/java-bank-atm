@@ -1,3 +1,5 @@
+import exception.InsufficientFundsException;
+
 public class FixedDepositAccount extends Account {
     private double interestRate;
     private int maturityPeriod; // in months
@@ -33,5 +35,10 @@ public class FixedDepositAccount extends Account {
 
     public int getMaturityPeriod() {
         return maturityPeriod;
+    }
+
+    @Override
+    public void withdraw(double amount) throws InsufficientFundsException {
+
     }
 }

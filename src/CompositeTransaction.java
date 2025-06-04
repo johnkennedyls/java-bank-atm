@@ -11,10 +11,19 @@ public class CompositeTransaction implements Transaction {
     }
 
     @Override
+    public String getAccountNumber() {
+        return transactions.isEmpty() ? "" : transactions.get(0).getAccountNumber();
+    }
+
+    @Override
+    public double getAmount() {
+        return transactions.stream().mapToDouble(Transaction::getAmount).sum();
+    }
+
+    @Override
     public void execute() {
         for (Transaction t : transactions) {
             t.execute();
         }
     }
 }
-

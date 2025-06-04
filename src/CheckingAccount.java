@@ -9,7 +9,7 @@ public class CheckingAccount extends Account {
     @Override
     public void withdraw(double amount) throws InsufficientFundsException {
         if (amount > getBalance()) {
-            throw new InsufficientFundsException();
+            throw new InsufficientFundsException( "Insufficient funds for withdrawal.");
         }
         // Lógica específica de retiro...
         double newBalance = getBalance() - amount;
@@ -29,6 +29,10 @@ public class CheckingAccount extends Account {
         }
     }
 
-    private void setBalance(double newBalance) {
+    public void setBalance(double newBalance) {
+        if (newBalance < 0) {
+            throw new IllegalArgumentException("Balance cannot be negative.");
+        }
+        super.setBalance(newBalance);
     }
 }

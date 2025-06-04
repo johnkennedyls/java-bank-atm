@@ -1,7 +1,7 @@
 import exception.InsufficientFundsException;
 import exception.InvalidAccountException;
 
-public class Account {
+public abstract class Account {
     private String accountNumber;
     private double balance;
     private String pin;
@@ -28,6 +28,8 @@ public class Account {
     public String getAccountNumber() {
         return accountNumber;
     }
+
+    public abstract void withdraw(double amount) throws InsufficientFundsException;
 
     public void deposit(double amount) {
         balance += amount;
