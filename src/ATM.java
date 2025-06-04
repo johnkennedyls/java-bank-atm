@@ -1,29 +1,10 @@
-import exception.InsufficientFundsException;
-import exception.InvalidAccountException;
-
-import java.util.HashMap;
-import java.util.Map;
+import contract.Transaction;
 
 public class ATM {
-    private Map<String, Account> accounts;
+    private static final String LOG_FILE = "transactions.log";
+    private TransactionLogger logger = new TransactionLogger(LOG_FILE);
 
-    public ATM() {
-        accounts = new HashMap<>();
-    }
-
-    public void performTransfer(String sourceAccountNumber, String targetAccountNumber, double amount) {
-        try {
-            accounts.get(sourceAccountNumber).transferFunds(targetAccountNumber, amount);
-            System.out.println("Transferencia exitosa");
-        } catch (InvalidAccountException | InsufficientFundsException e) {
-            System.out.println("Error: " + e.getMessage());
-        } finally {
-            // Registro de la transacción
-            if (accounts.containsKey(targetAccountNumber)) {
-                System.out.println("Registro de transacción: " + amount + " transferidos de " + sourceAccountNumber + " a " + targetAccountNumber);
-            } else {
-                System.out.println("No se pudo registrar la transacción, cuenta destino no válida.");
-            }
-        }
+    public void performTransaction(String accountNumber, Transaction.TransactionType type, double amount) {
+        logger.logTransaction(accountNumber + " " + type + " " + amount);
     }
 }
