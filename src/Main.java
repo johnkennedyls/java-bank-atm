@@ -1,38 +1,32 @@
+import java.util.ArrayList;
+
 public class Main {
-    private String pin = "1234";
+    public static void main(String[] args) {
+        double balance = 1000.0;
+        ArrayList<String> transactionHistory = new ArrayList<>();
 
+        deposit(500, balance, transactionHistory);
+        withdraw(100, balance, transactionHistory);
 
-    public boolean authenticateUser(String inputPin) {
-        int attempts = 0;
-        while (attempts < 3) {
-            if (this.pin.equals(inputPin)) {
-                return true;
-            } else {
-                attempts++;
-                System.out.println("PIN incorrecto. Intento " + attempts + " de 3.");
-            }
+        System.out.println("Balance final: " + balance);
+        for (String transaction : transactionHistory) {
+            System.out.println(transaction);
         }
-        return false;
     }
 
-    public static void main(String[] args) {
-        // Variables básicas
-        String accountNumber = "123456789";
-        double balance = 1500.75;
-        int pin = 1234;
+    public static void deposit(double amount, double balance, ArrayList<String> transactionHistory) {
+        balance += amount;
+        transactionHistory.add("Deposited: $" + amount);
+    }
 
-        // Array de montos de transacciones
-        int[] transactionAmounts = {200, -100, 50};
-
-        // Operaciones con variables
-        balance += transactionAmounts[0]; // Depósito
-        if (balance > 0 && pin == 1234) {
-            System.out.println("Acceso Concedido");
+    public static boolean withdraw(double amount, double balance, ArrayList<String> transactionHistory) {
+        if (balance >= amount) {
+            balance -= amount;
+            transactionHistory.add("Withdrew: $" + amount);
+            return true;
+        } else {
+            System.out.println("Insufficient funds");
+            return false;
         }
-
-        // Uso de operadores
-        balance++; // Incremento
-        String status = (balance < 0) ? "Deuda" : "Crédito";
-        System.out.println("Estado de cuenta: " + status);
     }
 }
