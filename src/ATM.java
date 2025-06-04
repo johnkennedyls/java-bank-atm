@@ -1,10 +1,35 @@
 import contract.Transaction;
+import contract.TransactionFilter;
+
+import java.util.List;
+import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class ATM {
-    private static final String LOG_FILE = "transactions.log";
-    private TransactionLogger logger = new TransactionLogger(LOG_FILE);
+    TransactionFilter highValueTransactions = t -> t.getAmount() > 1000;
 
-    public void performTransaction(String accountNumber, Transaction.TransactionType type, double amount) {
-        logger.logTransaction(accountNumber + " " + type + " " + amount);
+    List<TransactionForStream> transactions = new ArrayList<>(); // Inicializar la lista de transacciones
+    List<TransactionForStream> highValueList = transactions.stream()
+            .filter(t -> highValueTransactions.filter(t))
+            .collect(Collectors.toList());
+
+    TransactionFilter deposits = t -> t.getType() == Transaction.TransactionType.DEPOSIT;
+    TransactionFilter withdrawals = t -> t.getType() == Transaction.TransactionType.WITHDRAWAL;
+
+    List<Transaction> depositList = transactions.stream()
+            .filter(deposits::filter)
+            .collect(Collectors.toList());
+
+    List<Transaction> withdrawalList = transactions.stream()
+            .filter(withdrawals::filter)
+            .collect(Collectors.toList());
+
+    public void updateBalancesAsync() {
+        CompletableFuture.runAsync(() -> {
+            // Lógica para actualizar saldos
+            System.out.println("Updating balances asynchronously...");
+        });
     }
+
 }
