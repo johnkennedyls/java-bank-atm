@@ -1,37 +1,29 @@
-import contract.Authenticatable;
-import exception.InsufficientFundsException;
+import contract.Observer;
 
-public abstract class Account implements Authenticatable {
-    private String accountNumber;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Account {
+    private List<Observer> observers = new ArrayList<>();
     private double balance;
-    private String pin;
 
-    public Account(String accountNumber, double balance, String pin) {
-        this.accountNumber = accountNumber;
-        this.balance = balance;
-        this.pin = pin;
+    public void addObserver(Observer observer) {
+        observers.add(observer);
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-    public double getBalance() {
-        return balance;
-    }
-    public abstract void withdraw(double amount) throws InsufficientFundsException;
-    public abstract void deposit(double amount);
-
-    @Override
-    public boolean authenticate(String pin) {
-        return this.pin.equals(pin);
+    public void deposit(double amount) {
+        balance += amount;
+        notifyObservers();
     }
 
-    public void setBalance(double newBalance) {
-        if (newBalance < 0) {
-            throw new IllegalArgumentException("Balance cannot be negative.");
+    public void withdraw(double amount) {
+        balance -= amount;
+        notifyObservers();
+    }
+
+    private void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(balance);
         }
-        this.balance = newBalance;
     }
 }
-
-

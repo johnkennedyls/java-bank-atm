@@ -1,15 +1,14 @@
-import contract.Authenticatable;
+import contract.AuthStrategy;
 
-public class ATM implements Authenticatable {
 
-    private String storedPin = "1234"; // Example stored PIN
+    public class ATM {
+        private AuthStrategy authStrategy;
 
-    @Override
-    public boolean authenticate(String pin) {
-        if (pin != null && pin.equals(storedPin)) {
-            return true; // Authentication successful
-        } else {
-            return false; // Authentication failed
+        public void setAuthStrategy(AuthStrategy authStrategy) {
+            this.authStrategy = authStrategy;
+        }
+
+        public boolean authenticateUser(String data) {
+            return authStrategy.authenticate(data);
         }
     }
-}
